@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Models\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LocationController extends Controller
 {
@@ -25,6 +27,13 @@ class LocationController extends Controller
             'address' => 'required',
         ]);
         Location::create($validatedData);
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Create Location',
+            'details' => 'Create Location Success.',
+            'status' => 'Success',
+        ]);
 
         return redirect('/location')->with('success', 'Location data successfully added');
     }
@@ -49,6 +58,13 @@ class LocationController extends Controller
             'address' => $request->address,
         ]);
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Update Location',
+            'details' => 'Update Location Success.',
+            'status' => 'Success',
+        ]);
+
         return redirect('/location')->with('success', 'Location data successfully edited');
     }
 
@@ -61,7 +77,12 @@ class LocationController extends Controller
 
         try {
             Location::destroy($id);
-
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'action' => 'Delete Location',
+                'details' => 'Delete Location Success.',
+                'status' => 'Success',
+            ]);
             return redirect('/location')->with('success', 'Data User berhasil dihapus');
         } catch (\illuminate\Database\QueryException $e) {
             return redirect('/location')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');

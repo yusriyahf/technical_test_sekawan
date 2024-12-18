@@ -8,6 +8,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\VehicleController;
 use App\Exports\OrdersExport;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogController;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 /*
@@ -35,6 +36,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/orders/export', function (Request $request) {
             return Excel::download(new OrdersExport($request->input('month'), $request->input('year'), $request->input('status')), 'orders.xlsx');
         })->name('orders.export');
+        // Log
+        Route::get('/log', [LogController::class, 'index']);
+
         // Location
         Route::get('/location', [LocationController::class, 'index']);
         Route::get('/location/create', [LocationController::class, 'create']);

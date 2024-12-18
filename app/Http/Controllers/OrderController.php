@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Driver;
+use App\Models\Log;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -80,6 +81,13 @@ class OrderController extends Controller
             'status' => 'pending',
         ]);
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Add Booking',
+            'details' => 'Add Booking Success.',
+            'status' => 'Success',
+        ]);
+
         $vehicle = Vehicle::find($validatedData['vehicle']);
 
         if ($vehicle) {
@@ -121,6 +129,13 @@ class OrderController extends Controller
             'reason' => $request->reason,
         ]);
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Update Booking',
+            'details' => 'Update Booking Success.',
+            'status' => 'Success',
+        ]);
+
         return redirect('/order')->with('success', 'Order data successfully edited');
     }
 
@@ -131,8 +146,14 @@ class OrderController extends Controller
             return redirect('/order')->with('error', 'Data stok tidak ditemukan');
         }
         try {
-            Order::destroy($id);
 
+            Order::destroy($id);
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'action' => 'Delete Booking',
+                'details' => 'Delete Booking Success.',
+                'status' => 'Success',
+            ]);
             return redirect('/order')->with('success', 'Order data successfully deleted');
         } catch (\illuminate\Database\QueryException $e) {
             return redirect('/order')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
@@ -147,10 +168,22 @@ class OrderController extends Controller
             $order->update([
                 'status' => 'approved_level_1',
             ]);
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'action' => 'Approve Booking',
+                'details' => 'Approve Level 1 Booking Success.',
+                'status' => 'Success',
+            ]);
             return redirect('/order')->with('success', 'Approval Level 1 Successful');
         } elseif ($order->status == 'approved_level_1') {
             $order->update([
                 'status' => 'approved_level_2',
+            ]);
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'action' => 'Approve Booking',
+                'details' => 'Approve Level 2 Booking Success.',
+                'status' => 'Success',
             ]);
             return redirect('/order')->with('success', 'Approval Level 2 Successful');
         }
@@ -164,6 +197,12 @@ class OrderController extends Controller
 
         $order->update([
             'status' => 'rejected',
+        ]);
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Rejected Booking',
+            'details' => 'Rejected Booking Success.',
+            'status' => 'Success',
         ]);
 
         return redirect('/order')->with('success', 'Rejected Successful');

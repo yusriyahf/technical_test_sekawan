@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VehicleController extends Controller
 {
@@ -27,9 +29,17 @@ class VehicleController extends Controller
             'fuel_consumption' => 'required',
         ]);
 
+
         $validatedData['status'] = 'available';
 
         Vehicle::create($validatedData);
+
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Create Vehicle',
+            'details' => 'Create Vehicle Success.',
+            'status' => 'Success',
+        ]);
 
         return redirect('/vehicle')->with('success', 'Vehicle data successfully added');
     }
@@ -58,6 +68,13 @@ class VehicleController extends Controller
             'fuel_consumption' => $request->fuel_consumption,
         ]);
 
+        Log::create([
+            'user_id' => Auth::user()->id,
+            'action' => 'Update Vehicle',
+            'details' => 'Update Vehicle Success.',
+            'status' => 'Success',
+        ]);
+
         return redirect('/vehicle')->with('success', 'Vehicle data successfully edited');
     }
 
@@ -70,7 +87,12 @@ class VehicleController extends Controller
 
         try {
             Vehicle::destroy($id);
-
+            Log::create([
+                'user_id' => Auth::user()->id,
+                'action' => 'Delete Vehicle',
+                'details' => 'Delete Vehicle Success.',
+                'status' => 'Success',
+            ]);
             return redirect('/vehicle')->with('success', 'Vehicle data successfully deleted');
         } catch (\illuminate\Database\QueryException $e) {
             return redirect('/vehicle')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');

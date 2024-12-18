@@ -19,7 +19,16 @@
         <span class="hide-menu">Booking</span>
       </a>
   </li>
-    @can('IsAdmin')
+  @can('IsAdmin')
+
+  <li class="sidebar-item">
+    <a class="sidebar-link {{ Request::is('log*') ? 'active' : '' }}" href="/log" aria-expanded="false">
+      <span>
+        <i class="bi bi-clock-history"></i>
+      </span>
+      <span class="hide-menu">Log</span>
+    </a>
+</li>
     <li class="nav-small-cap">
       <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
       <span class="hide-menu">MANAGE DATA</span>
@@ -70,6 +79,7 @@
       </a>
   </li> --}}
   {{-- @endif --}}
+ 
     <li class="sidebar-item">
       {{-- <a class="sidebar-link" href="/logout" aria-expanded="false">
         <span>
