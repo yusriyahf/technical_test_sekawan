@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Driver;
+use App\Models\Location;
 use App\Models\Log;
 use App\Models\Order;
 use App\Models\User;
@@ -42,11 +43,12 @@ class OrderController extends Controller
             })->get();
         }
 
+        $locations = Location::all();
         $vehicles = Vehicle::all();
         $drivers = Driver::all();
         $approvals = User::where('role', 'approver')->get();
 
-        return view('order.index', ['data' => $data, 'vehicles' => $vehicles, 'drivers' => $drivers, 'approvals' => $approvals,]);
+        return view('order.index', ['data' => $data, 'vehicles' => $vehicles, 'drivers' => $drivers, 'approvals' => $approvals, 'locations' => $locations]);
     }
 
 
@@ -61,6 +63,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'location' => 'required',
             'vehicle' => 'required',
             'driver' => 'required',
             'approval1' => 'required',
@@ -71,6 +74,7 @@ class OrderController extends Controller
         ]);
 
         Order::create([
+            'location_id' => $validatedData['location'],
             'vehicle_id' => $validatedData['vehicle'],
             'driver_id' => $validatedData['driver'],
             'approver1_id' => $validatedData['approval1'],
@@ -109,6 +113,7 @@ class OrderController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
+            'location' => 'required',
             'vehicle' => 'required',
             'driver' => 'required',
             'approval1' => 'required',
@@ -120,6 +125,7 @@ class OrderController extends Controller
 
 
         Order::find($id)->update([
+            'location_id' => $request->location,
             'vehicle_id' => $request->vehicle,
             'driver_id' => $request->driver,
             'approver1_id' => $request->approval1,

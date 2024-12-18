@@ -77,14 +77,14 @@
                                         <h6 class="fw-semibold mb-0">Driver</h6>
                                     </th>
                                     <th class="border-bottom-0">
+                                        <h6 class="fw-semibold mb-0">Location</h6>
+                                    </th>
+                                    <th class="border-bottom-0">
                                         <h6 class="fw-semibold mb-0">Start Date</h6>
                                     </th>
                                     <th class="border-bottom-0">
                                         <h6 class="fw-semibold mb-0">End Date</h6>
                                     </th>
-                                    {{-- <th class="border-bottom-0">
-                                        <h6 class="fw-semibold mb-0">Location</h6>
-                                    </th> --}}
                                     <th class="border-bottom-0">
                                         <h6 class="fw-semibold mb-0">Status</h6>
                                     </th>
@@ -105,6 +105,9 @@
                                     </td>
                                     <td class="border-bottom-0">
                                         <p class="mb-0 fw-normal">{{ $d->driver->name }} - {{ $d->driver->license_number }}</p>
+                                    </td>
+                                    <td class="border-bottom-0">
+                                        <p class="mb-0 fw-normal">{{ $d->location->name }}</p>
                                     </td>
                                     <td class="border-bottom-0">
                                         <p class="mb-0 fw-normal">{{ $d->start_date }}</p>
@@ -185,6 +188,21 @@
                             <form id="bookingForm" action="/order/create" method="POST">
                                 @csrf
                                 
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <select class="form-control @error('location') is-invalid @enderror" id="location" name="location" required>
+                                        <option value="" disabled selected>Select a location</option>
+                                        @foreach($locations as $location)
+                                            <option value="{{ $location->id }}" {{ old('location') == $location->id ? 'selected' : '' }}>
+                                                {{ $location->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('location')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="vehicle" class="form-label">Vehicle</label>
                                     <select class="form-control @error('vehicle') is-invalid @enderror" id="vehicle" name="vehicle" required>
@@ -298,6 +316,21 @@
                                 @csrf
                                 @method('put')
                                 
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <select class="form-control @error('vehicle') is-invalid @enderror" id="location" name="location" required>
+                                        <option value="" disabled selected>Select a Location</option>
+                                        @foreach($locations as $location)
+                                            <option value="{{ $location->id }}" {{ old('location', $d->location_id) == $location->id ? 'selected' : '' }}>
+                                                {{ $location->name }} 
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('location')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
                                 <div class="mb-3">
                                     <label for="vehicle" class="form-label">Vehicle</label>
                                     <select class="form-control @error('vehicle') is-invalid @enderror" id="vehicle" name="vehicle" required>
