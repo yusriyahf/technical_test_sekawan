@@ -21,17 +21,17 @@ class VehicleController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'role' => 'required',
+            'vehicle_name' => 'required',
+            'vehicle_number' => 'required',
+            'type' => 'required',
+            'fuel_consumption' => 'required',
         ]);
 
+        $validatedData['status'] = 'available';
 
         Vehicle::create($validatedData);
 
-        return redirect('/user')->with('success', 'Data user Berhasil Ditambahkan');
+        return redirect('/vehicle')->with('success', 'Vehicle data successfully added');
     }
 
     public function edit(string $id)
@@ -45,39 +45,35 @@ class VehicleController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            // 'password' => 'required',
+            'vehicle_name' => 'required',
+            'vehicle_number' => 'required',
+            'type' => 'required',
+            'fuel_consumption' => 'required',
         ]);
-
-        $password = bcrypt($request->password);
 
         Vehicle::find($id)->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => $password,
-            'role' => $request->role,
+            'vehicle_name' => $request->vehicle_name,
+            'vehicle_number' => $request->vehicle_number,
+            'type' => $request->type,
+            'fuel_consumption' => $request->fuel_consumption,
         ]);
 
-        return redirect('/user')->with('success', 'Data user berhasil diubah');
+        return redirect('/vehicle')->with('success', 'Vehicle data successfully edited');
     }
 
     public function destroy(String $id)
     {
         $check = Vehicle::find($id);
         if (!$check) {
-            return redirect('/user')->with('error', 'Data stok tidak ditemukan');
+            return redirect('/vehicle')->with('error', 'Data stok tidak ditemukan');
         }
 
         try {
             Vehicle::destroy($id);
 
-            return redirect('/user')->with('success', 'Data User berhasil dihapus');
+            return redirect('/vehicle')->with('success', 'Vehicle data successfully deleted');
         } catch (\illuminate\Database\QueryException $e) {
-            return redirect('/User')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
+            return redirect('/vehicle')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
     }
 }

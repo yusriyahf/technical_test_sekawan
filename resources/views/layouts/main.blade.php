@@ -14,7 +14,7 @@
   <meta name="csrf-token" content="{{ csrf_token() }}"/> 
 
   <title>Sekawan</title>
-  <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/favicon.png') }}" />
+  <link rel="shortcut icon" type="image/png" href="{{ asset('images/logos/tambanglogo.png') }}" />
   <link rel="stylesheet" href="{{ asset('css/styles.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/pemesanan-kamar.css') }}">
   <link rel="stylesheet" href="{{ asset('css/detail-kamar.css') }}">
@@ -35,20 +35,21 @@
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-center">
-            <div class="logo-container" style="display: flex; justify-content: center; align-items: center; height: 150px;">
-                <a href="./index.html" class="text-nowrap logo-img">
-                    {{-- <img src="{{ asset('images/logos/matoangin2.png') }}" alt="Kos Matoangin Logo" style="width: 100px; height: 100px; border-radius: 50%;"> --}}
-                </a>
+            <a href="#" class="text-nowrap logo-img">
+                <img src="{{ asset('images/logos/tambanglogo.png') }}" width="140" alt="" />
+            </a>
+            <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
+                <i class="ti ti-x fs-8"></i>
             </div>
         </div>
-
-
+    
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-         @include('layouts.sidebar')
+            @include('layouts.sidebar')
         </nav>
         <!-- End Sidebar navigation -->
-      </div>
+    </div>
+    
       <!-- End Sidebar scroll-->
     </aside>
     <!--  Sidebar End -->
@@ -79,6 +80,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 @yield('scripts')
 @stack('scripts')
 </body>

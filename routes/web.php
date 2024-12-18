@@ -6,7 +6,10 @@ use App\Http\Controllers\DriverController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\VehicleController;
-
+use App\Exports\OrdersExport;
+use App\Http\Controllers\DashboardController;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,6 +32,9 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::middleware(['admin'])->group(function () {
+        Route::get('/orders/export', function (Request $request) {
+            return Excel::download(new OrdersExport($request->input('month'), $request->input('year'), $request->input('status')), 'orders.xlsx');
+        })->name('orders.export');
         // Location
         Route::get('/location', [LocationController::class, 'index']);
         Route::get('/location/create', [LocationController::class, 'create']);
@@ -65,11 +71,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/approve/{id}', [OrderController::class, 'approve']);
         Route::put('/rejected/{id}', [OrderController::class, 'rejected']);
     });
-    Route::get('/', function () {
-        return view('welcome');
-    });
 
-    Route::get('/order', [OrderController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/order', [OrderController::class, 'index'])->name('order');
 
 
     Route::post('/logout', [AuthController::class, 'logout']);

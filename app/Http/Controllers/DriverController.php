@@ -21,17 +21,15 @@ class DriverController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'role' => 'required',
+            'name' => 'required',
+            'license_number' => 'required',
+            'phone' => 'required',
         ]);
 
 
         Driver::create($validatedData);
 
-        return redirect('/user')->with('success', 'Data user Berhasil Ditambahkan');
+        return redirect('/driver')->with('success', 'Driver data successfully added');
     }
 
     public function edit(string $id)
@@ -45,39 +43,34 @@ class DriverController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            // 'password' => 'required',
+            'name' => 'required',
+            'license_number' => 'required',
+            'phone' => 'required',
         ]);
 
-        $password = bcrypt($request->password);
 
         Driver::find($id)->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => $password,
-            'role' => $request->role,
+            'name' => $request->name,
+            'license_number' => $request->license_number,
+            'phone' => $request->phone,
         ]);
 
-        return redirect('/user')->with('success', 'Data user berhasil diubah');
+        return redirect('/driver')->with('success', 'Driver data successfully edited');
     }
 
     public function destroy(String $id)
     {
         $check = Driver::find($id);
         if (!$check) {
-            return redirect('/user')->with('error', 'Data stok tidak ditemukan');
+            return redirect('/driver')->with('error', 'Data stok tidak ditemukan');
         }
 
         try {
             Driver::destroy($id);
 
-            return redirect('/user')->with('success', 'Data User berhasil dihapus');
+            return redirect('/driver')->with('success', 'Driver data successfully deleted');
         } catch (\illuminate\Database\QueryException $e) {
-            return redirect('/User')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
+            return redirect('/driver')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
     }
 }

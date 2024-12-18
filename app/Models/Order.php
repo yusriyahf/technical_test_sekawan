@@ -35,4 +35,15 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function approver1()
+    {
+        return $this->belongsTo(User::class, 'approver1_id');
+    }
+
+    // Relasi untuk approver2
+    public function approver2()
+    {
+        return $this->belongsTo(User::class, 'approver2_id');
+    }
 }

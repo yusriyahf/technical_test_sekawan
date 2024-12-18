@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('driver_id')->constrained('drivers');
             $table->foreignId('approver1_id')->constrained('users');
             $table->foreignId('approver2_id')->constrained('users');
+            $table->foreignId('location_id')->constrained('locations');
             $table->date('start_date');
             $table->date('end_date');
             $table->string('reason')->nullable();

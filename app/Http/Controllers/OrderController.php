@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Approval;
 use App\Models\Driver;
 use App\Models\Order;
 use App\Models\User;
@@ -13,17 +12,42 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        if (Gate::allows('IsAdmin')) {
-            $data = Order::all();
-        } else {
-            $data = Order::where('approver1_id', Auth::user()->id)
-                ->orWhere('approver2_id', Auth::user()->id)
-                ->get();
+        $query = Order::query();
+
+        // Filter berdasarkan bulan
+        if ($request->filled('month')) {
+            $query->whereMonth('start_date', $request->month);
         }
-        return view('order.index', ['data' => $data]);
+
+        // Filter berdasarkan tahun
+        if ($request->filled('year')) {
+            $query->whereYear('start_date', $request->year);
+        }
+
+        // Filter berdasarkan status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter berdasarkan role
+        if (Gate::allows('IsAdmin')) {
+            $data = $query->get();
+        } else {
+            $data = $query->where(function ($q) {
+                $q->where('approver1_id', Auth::user()->id)
+                    ->orWhere('approver2_id', Auth::user()->id);
+            })->get();
+        }
+
+        $vehicles = Vehicle::all();
+        $drivers = Driver::all();
+        $approvals = User::where('role', 'approver')->get();
+
+        return view('order.index', ['data' => $data, 'vehicles' => $vehicles, 'drivers' => $drivers, 'approvals' => $approvals,]);
     }
+
 
     public function create()
     {
@@ -58,13 +82,10 @@ class OrderController extends Controller
 
         $vehicle = Vehicle::find($validatedData['vehicle']);
 
-        // Jika driver ditemukan, update statusnya menjadi 'in_use'
         if ($vehicle) {
             $vehicle->status = 'in_use';
             $vehicle->save();
         }
-
-        // Order::create($validatedData);
 
         return redirect('/order')->with('success', 'Order data successfully added');
     }
@@ -80,39 +101,41 @@ class OrderController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            // 'password' => 'required',
+            'vehicle' => 'required',
+            'driver' => 'required',
+            'approval1' => 'required',
+            'approval2' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'reason' => 'required',
         ]);
 
-        $password = bcrypt($request->password);
 
         Order::find($id)->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => $password,
-            'role' => $request->role,
+            'vehicle_id' => $request->vehicle,
+            'driver_id' => $request->driver,
+            'approver1_id' => $request->approval1,
+            'approver2_id' => $request->approval2,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'reason' => $request->reason,
         ]);
 
-        return redirect('/user')->with('success', 'Data user berhasil diubah');
+        return redirect('/order')->with('success', 'Order data successfully edited');
     }
 
     public function destroy(String $id)
     {
         $check = Order::find($id);
         if (!$check) {
-            return redirect('/user')->with('error', 'Data stok tidak ditemukan');
+            return redirect('/order')->with('error', 'Data stok tidak ditemukan');
         }
-
         try {
             Order::destroy($id);
 
-            return redirect('/user')->with('success', 'Data User berhasil dihapus');
+            return redirect('/order')->with('success', 'Order data successfully deleted');
         } catch (\illuminate\Database\QueryException $e) {
-            return redirect('/User')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
+            return redirect('/order')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
     }
 

@@ -9,7 +9,8 @@ class Vehicle extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['vehicle_number', 'type', 'location_id'];
+    // protected $fillable = ['vehicle_number', 'type', 'location_id'];
+    protected $guarded = ['id'];
 
     public function location()
     {

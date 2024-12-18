@@ -21,17 +21,12 @@ class LocationController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'role' => 'required',
+            'name' => 'required',
+            'address' => 'required',
         ]);
-
-
         Location::create($validatedData);
 
-        return redirect('/user')->with('success', 'Data user Berhasil Ditambahkan');
+        return redirect('/location')->with('success', 'Location data successfully added');
     }
 
     public function edit(string $id)
@@ -45,39 +40,31 @@ class LocationController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required',
-            'role' => 'required',
-            // 'password' => 'required',
+            'name' => 'required',
+            'address' => 'required',
         ]);
-
-        $password = bcrypt($request->password);
 
         Location::find($id)->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'password' => $password,
-            'role' => $request->role,
+            'name' => $request->name,
+            'address' => $request->address,
         ]);
 
-        return redirect('/user')->with('success', 'Data user berhasil diubah');
+        return redirect('/location')->with('success', 'Location data successfully edited');
     }
 
     public function destroy(String $id)
     {
         $check = Location::find($id);
         if (!$check) {
-            return redirect('/user')->with('error', 'Data stok tidak ditemukan');
+            return redirect('/location')->with('error', 'Data stok tidak ditemukan');
         }
 
         try {
             Location::destroy($id);
 
-            return redirect('/user')->with('success', 'Data User berhasil dihapus');
+            return redirect('/location')->with('success', 'Data User berhasil dihapus');
         } catch (\illuminate\Database\QueryException $e) {
-            return redirect('/User')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
+            return redirect('/location')->with('error' . 'Data User gagal dihapus karena masih terdapat tabel lain yang terkait dengan data ini');
         }
     }
 }

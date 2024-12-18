@@ -4,9 +4,9 @@
       <span class="hide-menu">Menu</span>
     </li>
     <li class="sidebar-item">
-      <a class="sidebar-link" href="#" aria-expanded="false">
+      <a class="sidebar-link {{ Request::is('dashboard*') ? 'active' : '' }} " href="/dashboard" aria-expanded="false">
           <span>
-              <i class="ti ti-dashboard"></i>
+            <i class="bi bi-speedometer2"></i>
           </span>
           <span class="hide-menu">Dashboard</span>
       </a>
@@ -14,9 +14,9 @@
     <li class="sidebar-item">
       <a class="sidebar-link {{ Request::is('order*') ? 'active' : '' }}" href="/order" aria-expanded="false">
         <span>
-          <i class="ti ti-home"></i>
+          <i class="bi bi-calendar4"></i>
         </span>
-        <span class="hide-menu">Order</span>
+        <span class="hide-menu">Booking</span>
       </a>
   </li>
     @can('IsAdmin')
@@ -28,7 +28,7 @@
     <li class="sidebar-item">
         <a class="sidebar-link {{ Request::is('vehicle*') ? 'active' : '' }}" href="/vehicle" aria-expanded="false">
           <span>
-            <i class="ti ti-home"></i>
+            <i class="bi bi-truck"></i>
           </span>
           <span class="hide-menu">Vehicle</span>
         </a>
@@ -36,7 +36,7 @@
     <li class="sidebar-item">
         <a class="sidebar-link {{ Request::is('driver*') ? 'active' : '' }}" href="/driver" aria-expanded="false">
           <span>
-            <i class="ti ti-home"></i>
+            <i class="bi bi-person"></i>
           </span>
           <span class="hide-menu">Driver</span>
         </a>
@@ -44,7 +44,7 @@
     <li class="sidebar-item">
         <a class="sidebar-link {{ Request::is('location*') ? 'active' : '' }}" href="/location" aria-expanded="false">
           <span>
-            <i class="ti ti-home"></i>
+            <i class="bi bi-geo-alt"></i>
           </span>
           <span class="hide-menu">Location</span>
         </a>
@@ -59,7 +59,7 @@
 
     {{-- @if(Gate::allows('is-user')) --}}
 
-    <li class="sidebar-item">
+    {{-- <li class="sidebar-item">
       <a class="sidebar-link" href="/update-profil" aria-expanded="false">
         <span class="icon-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
@@ -68,7 +68,7 @@
         </span>
         <span class="hide-menu">Profil</span>
       </a>
-  </li>
+  </li> --}}
   {{-- @endif --}}
     <li class="sidebar-item">
       {{-- <a class="sidebar-link" href="/logout" aria-expanded="false">
@@ -81,7 +81,7 @@
         @csrf
         <button type="submit" class="sidebar-link" style="background: none; border: none; font: inherit; color: inherit; cursor: pointer;">
             <span>
-                <i class="ti ti-login"></i>
+              <i class="bi bi-box-arrow-left"></i>
             </span>
             <span class="hide-menu">Logout</span>
         </button>
