@@ -80,13 +80,19 @@ This will populate the database with sample data:
 php artisan db:seed
 ```
 
-### 7. Start the Development Server
+### 7. Generate App key
+
+```bash
+php artisan key:generate
+```
+
+### 8. Start the Development Server
 
 ```bash
 php artisan serve
 ```
 
-### 8. Access the Application
+### 9. Access the Application
 
 -   Open your browser and navigate to `http://localhost:8000`.
 

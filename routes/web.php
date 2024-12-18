@@ -22,13 +22,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
     Route::post('/login', [AuthController::class, 'authenticate']);
+    Route::get('/', [AuthController::class, 'index'])->name('login');
 });
 
 Route::middleware('auth')->group(function () {
